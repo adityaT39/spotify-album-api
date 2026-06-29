@@ -1,0 +1,41 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    # Load Spotify credentials (and anything else) from .env at runtime.
+    env_file:
+      - .env
+    # Point the app at the Postgres service instead of local SQLite.
+    # This overrides DATABASE_URL from .env inside the container.
+    environment:
+      DATABASE_URL: postgresql+psycopg://albums:albums@db:5432/albums
+    depends_on:
+      db:
+        condition: service_healthy
+    # Mount the code in for live reload while developing.
+    volumes:
+      - ./app:/app/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: albums
+      POSTGRES_PASSWORD: albums
+      POSTGRES_DB: albums
+    # Host port 5433 maps to Postgres' 5432 inside the container, avoiding a
+    # clash with any PostgreSQL already running locally on 5432. The api
+    # service still reaches it as db:5432 over the internal Docker network.
+    ports:
+      - "5433:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U albums"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  dbdata:
