@@ -15,7 +15,7 @@ from app.database import Base, get_db
 from app.main import app
 from app.models import User
 from app.security import create_access_token
-from app.services import spotify
+from app.services import cache, spotify
 
 
 @pytest.fixture
@@ -122,3 +122,5 @@ def mock_spotify(monkeypatch):
     monkeypatch.setattr(spotify, "get_item", fake_get_item)
     monkeypatch.setattr(spotify, "search_albums", fake_search_albums)
     monkeypatch.setattr(spotify, "search_tracks", fake_search_tracks)
+    # Disable the cache so tests never touch Redis.
+    monkeypatch.setattr(cache, "_client", None)

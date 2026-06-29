@@ -24,5 +24,8 @@ class Settings(BaseSettings):
     jwt_secret: str = "dev-secret-change-me"
     jwt_expires_minutes: int = 60 * 24 * 7  # one week
 
+    # Redis, used to cache Spotify catalog lookups.
+    redis_url: str = "redis://localhost:6379/0"
+
 
 settings = Settings()

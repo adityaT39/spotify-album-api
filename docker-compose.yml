@@ -10,9 +10,12 @@ services:
     # This overrides DATABASE_URL from .env inside the container.
     environment:
       DATABASE_URL: postgresql+psycopg://albums:albums@db:5432/albums
+      REDIS_URL: redis://cache:6379/0
     depends_on:
       db:
         condition: service_healthy
+      cache:
+        condition: service_started
     # Mount the code in for live reload while developing.
     volumes:
       - ./app:/app/app
@@ -36,6 +39,9 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+
+  cache:
+    image: redis:7
 
 volumes:
   dbdata:
