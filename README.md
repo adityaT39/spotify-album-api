@@ -50,6 +50,12 @@ uvicorn app.main:app --reload
 
 This uses a local SQLite file instead of PostgreSQL — handy for quick local work.
 
+## Deploy
+
+Deployable to [Render](https://render.com) via the included
+[`render.yaml`](render.yaml) blueprint (web service + PostgreSQL + Redis).
+See [DEPLOY.md](DEPLOY.md) for the step-by-step guide.
+
 ## Project status
 
 - [x] Project foundation: config, database, models, health check

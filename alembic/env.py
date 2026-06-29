@@ -19,10 +19,9 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Prefer DATABASE_URL from the environment, falling back to app settings.
-config.set_main_option(
-    "sqlalchemy.url", os.getenv("DATABASE_URL", settings.database_url)
-)
+# The URL comes from app settings (which read DATABASE_URL from the
+# environment), normalized for psycopg 3.
+config.set_main_option("sqlalchemy.url", settings.sqlalchemy_url)
 
 target_metadata = Base.metadata
 

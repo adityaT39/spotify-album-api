@@ -27,5 +27,19 @@ class Settings(BaseSettings):
     # Redis, used to cache Spotify catalog lookups.
     redis_url: str = "redis://localhost:6379/0"
 
+    @property
+    def sqlalchemy_url(self) -> str:
+        """Database URL normalized for SQLAlchemy + psycopg 3.
+
+        Managed Postgres providers (Render, Heroku, ...) hand out
+        `postgres://` / `postgresql://` URLs, which SQLAlchemy maps to the
+        psycopg2 driver. We use psycopg 3, so rewrite the scheme.
+        """
+        url = self.database_url
+        for prefix in ("postgresql://", "postgres://"):
+            if url.startswith(prefix):
+                return "postgresql+psycopg://" + url[len(prefix) :]
+        return url
+
 
 settings = Settings()
