@@ -1,26 +1,17 @@
-"""Application entry point. Creates the FastAPI app and wires up routes."""
+"""Application entry point. Creates the FastAPI app and wires up routes.
 
-from contextlib import asynccontextmanager
+The database schema is managed by Alembic migrations (see the alembic/ folder
+and `alembic upgrade head`), not created at startup.
+"""
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from httpx import HTTPStatusError
 
-from app import models  # noqa: F401  (import registers the models with Base)
 from app.api import albums, auth, library, listen_list, lists, ratings, tracks
 from app.config import settings
-from app.database import Base, engine
 
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # On startup, create any tables that don't exist yet. For a portfolio
-    # project this is fine; we'll switch to Alembic migrations later.
-    Base.metadata.create_all(bind=engine)
-    yield
-
-
-app = FastAPI(title=settings.app_name, version="0.1.0", lifespan=lifespan)
+app = FastAPI(title=settings.app_name, version="0.1.0")
 
 app.include_router(auth.router)
 app.include_router(albums.router)
