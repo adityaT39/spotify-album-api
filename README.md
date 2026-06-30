@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/adityaT39/spotify-album-api/actions/workflows/ci.yml/badge.svg)](https://github.com/adityaT39/spotify-album-api/actions/workflows/ci.yml)
 
+**Live API:** [spotify-album-api.onrender.com/docs](https://spotify-album-api.onrender.com/docs) — interactive Swagger UI (free tier; first load may take ~30s to wake)
+
 A backend REST API for rating music — think "Letterboxd, but for music." Users sign in
 with **Spotify (OAuth 2.0)**, search albums and individual tracks, rate and review them,
 and build listen lists and custom lists. The app is the **system of record** for your
